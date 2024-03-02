@@ -150,7 +150,7 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
                                     },
                                   );
                                 },
-                                child: const Icon(
+                                child:  Icon(
                                   Icons.play_arrow,
                                 ),
                               ),
