@@ -155,7 +155,7 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
                                 ),
                               ),
                       ),
-                      title: Text('Audiooooo ${index + 1}'),
+                      title: Text('Audio ${index + 1}'),
                     );
                   },
                 ),
