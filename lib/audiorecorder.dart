@@ -17,6 +17,7 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
   String audioPath = '';
   List<String> audioList = [];
   List<bool> isPlaying = [];
+  var scrollController = ScrollController();
 
   @override
   void initState() {
@@ -80,6 +81,7 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
       print(e);
     }
   }
+
   ///stopAudio
   Future<void> stopAudio(int index) async {
     try {
@@ -91,6 +93,7 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('audioList: $audioList');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Audio Recorder'),
@@ -116,48 +119,61 @@ class _AudioRecorderPageState extends State<AudioRecorderPage> {
             ),
             if (audioPath != null && !isRecording)
               Expanded(
-                child: ListView.builder(
-                  itemCount: audioList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        child: isPlaying[index]
-                            ? InkWell(
-                                onTap: () {
-                                  stopAudio(index);
-                                  setState(
-                                    () {
-                                      isPlaying[index] = false;
-                                    },
-                                  );
-                                },
-                                child: const Icon(
-                                  Icons.pause,
-                                ),
-                              )
-                            : InkWell(
-                                onTap: () {
-                                  playAudio(audioList[index], index);
-                                  setState(
-                                    () {
-                                      isPlaying[index] = true;
-                                      ///digerleri durdur]
-                                      for (int i = 0; i < isPlaying.length; i++) {
-                                        if (i != index) {
-                                          isPlaying[i] = false;
+                child: Scrollbar(
+                // thumbVisibility: true,
+                 // trackVisibility: true,
+                  controller: scrollController
+                    ..addListener((){
+                      print('scrolling');
+
+                    }),
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: audioList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: isPlaying[index]
+                              ? InkWell(
+                                  onTap: () {
+                                    stopAudio(index);
+                                    setState(
+                                      () {
+                                        isPlaying[index] = false;
+                                      },
+                                    );
+                                  },
+                                  child: const Icon(
+                                    Icons.pause,
+                                  ),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    playAudio(audioList[index], index);
+                                    setState(
+                                      () {
+                                        isPlaying[index] = true;
+
+                                        ///digerleri durdur]
+                                        for (int i = 0;
+                                            i < isPlaying.length;
+                                            i++) {
+                                          if (i != index) {
+                                            isPlaying[i] = false;
+                                          }
                                         }
-                                      }
-                                    },
-                                  );
-                                },
-                                child:  Icon(
-                                  Icons.play_arrow,
+                                      },
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                  ),
                                 ),
-                              ),
-                      ),
-                      title: Text('Audio ${index + 1}'),
-                    );
-                  },
+                        ),
+                        title: Text('Audio ${index + 1}'),
+                      );
+                    },
+                  ),
                 ),
               ),
           ],
